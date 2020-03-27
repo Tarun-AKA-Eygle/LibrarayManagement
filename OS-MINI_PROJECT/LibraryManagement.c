@@ -1,10 +1,45 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
+#include <termios.h>
+#include <unistd.h>
+#include <stdio.h>
+
+/* reads from keypress, doesn't echo */
+int getch(void)
+{
+    struct termios oldattr, newattr;
+    int ch;
+    tcgetattr( STDIN_FILENO, &oldattr );
+    newattr = oldattr;
+    newattr.c_lflag &= ~( ICANON | ECHO );
+    tcsetattr( STDIN_FILENO, TCSANOW, &newattr );
+    ch = getchar();
+    tcsetattr( STDIN_FILENO, TCSANOW, &oldattr );
+    return ch;
+}
 int insertflag=0;
 char newString[10][10];
 int ctr;
 //Admin Functions
+int password(){
+    char ch[5],temp;
+	char pass[5]="Tarun";
+	int i=0,flag=1;
+	//clrscr();
+	printf("Enter password(Tarun)");
+    scanf("%c",&temp);
+	while(i<5){
+	ch[i]=getch();
+    printf("*");
+	if(ch[i]!=pass[i])
+    flag=0;
+	i++;
+	}
+            return 0;
+    
+    
+}
 void Splitter(char str1[]){
      int i,j;
     
@@ -724,37 +759,40 @@ void NONADMINUI(char user[]){
     char book[15],temp;
    // printf("Press 1 to Show ur details\nPress 2 to See the book list\nPress 3 to request a book\nPress 4 to exit\n");
     while (ch!=4)
-    {
-         printf("Press 1 to Show ur details\nPress 2 to See the book list\nPress 3 to request a book\nPress 4 to exit\n");
-         scanf("%d",&ch);
+    {    system("clear");
+         printf("Press 1 to Show ur details\nPress 2 to See the book list\nPress 3 to request a book\nPress 4 to exit\n");         scanf("%d",&ch);
     if(back==0){    
     switch (ch)
     {
     case 1:
+        system("clear");
         printdetail(user);
         back=1;
-        printf("Press 0 if u wanna go back\t 1 if exit");
+        printf("Press 0 if u wanna go back\t 1 if exit\n");
         scanf("%d",&back);
         break;
     case 2:
+    system("clear");
         displaybooks();
          back=1;
-        printf("Press 0 if u wanna go back\t 1 if exit");
+        printf("Press 0 if u wanna go back\t 1 if exit\n");
         scanf("%d",&back);
         
         break;
     case 3:
-         printf("Enter the name of the book");
+    system("clear");
+         printf("Enter the name of the book\n");
         scanf("%c",&temp); // temp statement to clear buffer
 	    scanf("%[^\n]",book);
         request(user,book);
          back=1;
 
-        printf("Press 0 if u wanna go back\t 1 if exit");
+        printf("Press 0 if u wanna go back\t 1 if exit\n");
         scanf("%d",&back);
         
     default:
-        printf("wrong in put tri again ");
+    system("clear");
+        printf("wrong in put tri again \n");
         break;
     }
     }
@@ -768,38 +806,43 @@ void ADMINUI(){
     strcpy(data,"");
    // printf("Press 1 to Show ur details\nPress 2 to See the book list\nPress 3 to request a book\nPress 4 to exit\n");
     while (ch!=5)
-    {
+    {   system("clear");
          printf("Press 1 to Display the database\nPress 2 to add something in the database\nPress 3 to delete something\nPress 4 to Reset the database\nPress 5 to exit\n");
          scanf("%d",&ch);
     if(back==0){    
     switch (ch)
     {
     case 1:
+    system("clear");
         display();
         back=1;
-        printf("Press 0 if u wanna go back\t 1 if exit");
+        printf("Press 0 if u wanna go back\t 1 if exit\n");
         scanf("%d",&back);
         break;
     case 2:
-        printf("Enter the section at which data is to appended");
+    system("clear");
+        printf("Enter the section at which data is to appended\n");
         scanf("%s\n",section);
-        printf("Enter the data to be inserted");
-        scanf("%s",d);
+        printf("Enter the data to be inserted\n");
+        scanf("%c",&temp); // temp statement to clear buffer
+	    scanf("%[^\n]",d);
         append(d,section);
          back=1;
-        printf("Press 0 if u wanna go back\t 1 if exit");
+        printf("Press 0 if u wanna go back\t 1 if exit\n");
         scanf("%d",&back);
         
         break;
     case 3:
-        printf("Enter the userid to be deleted And Enter the section ");
+    system("clear");
+        printf("Enter the userid to be deleted And Enter the section\n ");
         scanf("%s\t%s",user,section);
         delete(user,section);
          back=1;
-        printf("Press 0 if u wanna go back\t 1 if exit");
+        printf("Press 0 if u wanna go back\t 1 if exit\n");
         scanf("%d",&back);
         break;
     case 4:
+    system("clear");
         printf("Start inserting\n");
        while(strcmp(data,"EndOfInput")!=0){
         
@@ -810,11 +853,12 @@ void ADMINUI(){
             insert(data);
         }
          back=1;
-        printf("Press 0 if u wanna go back\t 1 if exit");
+        printf("Press 0 if u wanna go back\t 1 if exit\n");
         scanf("%d",&back);
         break;
     default:
-        printf("wrong in put tri again ");
+    system("clear");
+        printf("wrong in put tri again \n");
         break;
     }
     }
@@ -822,17 +866,22 @@ void ADMINUI(){
 }
 
 void main(){
-    char data[50],username[10],temp;int ch=1;
-   
+    char data[50],username[10],pass[10],temp;int ch=1;
+    
     while(ch!=3){
+         system("clear");
          printf("Press 1 in ur Admin\nPress 2 if ur non admin\npress 3 to exit\n");
          scanf("%d",&ch);
         switch (ch)
         {
         case 1:
-            /* if(password()==1){
-              }*/  ADMINUI();
-            
+             if (password()==1)
+                 ADMINUI();
+             else
+             
+                 printf("Wrong password\n");
+             
+             
             break;
         case 2:
             printf("Enter your username");
@@ -849,9 +898,10 @@ void main(){
         default:
             break;
         }
-    }
+        }
     
-
+printf("Checkout my github page of the source code https://github.com/Tarun-AKA-Eygle/LibrarayManagement\n");
+    
    
     
 
