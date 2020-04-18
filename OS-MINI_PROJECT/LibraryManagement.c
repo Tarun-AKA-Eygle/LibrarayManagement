@@ -36,7 +36,7 @@ int password(){
     flag=0;
 	i++;
 	}
-            return 0;
+            return flag;
     
     
 }
@@ -824,7 +824,7 @@ void ADMINUI(){
         printf("Enter the section at which data is to appended\n");
         scanf("%s\n",section);
         printf("Enter the data to be inserted\n");
-        scanf("%c",&temp); // temp statement to clear buffer
+        //scanf("%c",&temp); // temp statement to clear buffer
 	    scanf("%[^\n]",d);
         append(d,section);
          back=1;
